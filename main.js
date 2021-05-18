@@ -13,11 +13,12 @@ function preload(){
 	game.load.spritesheet("baddie", "./assets/baddie.png", 32, 32);
 
 	game.load.image("diamond", "./assets/diamond.png");
+	game.load.image("Health", "./assets/Health.png");
 }
 
 function create(){
 
-	game.physics.startSystem(Phaser.physics.Arcade)
+	game.physics.startSystem(Phaser.Physics.ARCADE)
 
 	game.add.sprite(0, 0, "sky");
 
@@ -152,10 +153,10 @@ function update(){
 
 	}
 
-else {
+	else {
 
-	player.animations.stop();
-	player.frame = 4;
+		player.animations.stop();
+		player.frame = 4;
 	
 	}
 
