@@ -63,7 +63,7 @@ function create(){
 }
 
 // Creating the player sprite
-player = game.add.sprite(32, 400, 'dude');
+var player = game.add.sprite(32, 400, 'dude');
 // Animating the player sprite
 player.animations.add('left', [0, 1, 2, 3], 10, true);
 player.animations.add('right', [5, 6, 7, 8], 10, true);
@@ -73,7 +73,7 @@ player.body.gravity.y = 300;
 player.body.collideWorldBounds = true;
 
 // Create the enemy
-enemy1 = game.add.sprite(760, 20, 'baddie');
+var enemy1 = game.add.sprite(760, 20, 'baddie');
 // Animate the enemy1
 enemy1.animations.add('left', [0,1], 10, true);
 enemy1.animations.add('right', [2,3], 10, true);
@@ -83,7 +83,7 @@ enemy1.body.gravity.y = 500;
 enemy1.body.collideWorldBounds = true;
 
 // Create the enemy
-enemy2 = game.add.sprite(10, 20, 'baddie');
+var enemy2 = game.add.sprite(10, 20, 'baddie');
 // Animate the enemy2
 enemy2.animations.add('left', [0,1], 10, true);
 enemy2.animations.add('right', [2,3], 10, true);
@@ -93,7 +93,7 @@ enemy2.body.gravity.y = 500;
 enemy2.body.collideWorldBounds = true;
 
 // Create the enemy
-enemy3 = game.add.sprite(200, 20, 'baddie');
+var enemy3 = game.add.sprite(200, 20, 'baddie');
 // Animate the enemy3
 enemy3.animations.add('left', [0,1], 10, true);
 enemy3.animations.add('right', [2,3], 10, true);
@@ -103,23 +103,23 @@ enemy3.body.gravity.y = 500;
 enemy3.body.collideWorldBounds = true;	
 	
 	// Create keyboard entries
-	cursors = game.imput.keyboard.createCursorKeys();
+	var cursors = game.imput.keyboard.createCursorKeys();
 	// Create Diamonds
-	diamonds = game.add.physicsGroup();
+	var diamonds = game.add.physicsGroup();
 	diamonds.enableBody = true;
 	var diamond = diamonds.create(Math.floor(Math.random()*750), 0, "diamond");
 	diamond.body.gravity.y = 200;
 	diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
 
 	//V2 - add enter key as an input
-	enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+	var enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
 
 	//V2 - create health pack group
-  	healths = game.add.physicsGroup();
+  	var healths = game.add.physicsGroup();
   	healths.enableBody = true;
 
   	//V2 - game over text
-  	goText = game.add.text(0,0,'',style);
+  	var goText = game.add.text(0,0,'',style);
   	goText.setShadow(3,3,'rgba(0,0,0,0.5)',2);
   	goText.setTextBounds(100,200,800,100);
   	goText.visible = false;
