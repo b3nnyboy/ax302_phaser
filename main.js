@@ -22,10 +22,10 @@ function create(){
 
 	game.add.sprite(0, 0, "sky");
 
-	var platform = game.add.physicsGroup();
-	platform.enableBody = true;
+	var platforms = game.add.physicsGroup();
+	platforms.enableBody = true;
 
-	var ground = platform.create(0, 550, "ground");
+	var ground = platforms.create(0, 550, "ground");
 	ground.scale.setTo(2, 2);
 	ground.body.immovable = true;
 
@@ -130,13 +130,13 @@ enemy3.body.collideWorldBounds = true;
 
 function update(){
 
-	game.physics.arcade.collide(player, platform);
-	game.physics.arcade.collide(stars, platform);
-	game.physics.arcade.collide(enemy1, platform);
-	game.physics.arcade.collide(enemy2, platform);
-	game.physics.arcade.collide(enemy3, platform);
-	game.physics.arcade.collide(diamonds, platform);
-	game.physics.arcade.collide(healths, platform);
+	game.physics.arcade.collide(player, platforms);
+	game.physics.arcade.collide(stars, platforms);
+	game.physics.arcade.collide(enemy1, platforms);
+	game.physics.arcade.collide(enemy2, platforms);
+	game.physics.arcade.collide(enemy3, platforms);
+	game.physics.arcade.collide(diamonds, platforms);
+	game.physics.arcade.collide(healths, platforms);
 
 
 	player.body.velocity.x = 0;
