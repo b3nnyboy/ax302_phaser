@@ -7,10 +7,12 @@ var lives = 3;
 
 function preload(){
 	game.load.image("sky", "./assets/sky.png");
-	game.load.image("platform", "./assets/sky.png");
-	game.load.image("star", "./assets/sky.png");
+	game.load.image("platform", "./assets/platform.png");
+	game.load.image("star", "./assets/star.png");
 	game.load.spritesheet("dude", "./assets/dude.png", 32, 48);
 	game.load.spritesheet("baddie", "./assets/baddie.png", 32, 32);
+
+	game.load.image("diamond", "./assets/diamond.png");
 }
 
 function create(){
@@ -79,7 +81,47 @@ enemy1.body.bounce.y = 0.2;
 enemy1.body.gravity.y = 500;
 enemy1.body.collideWorldBounds = true;
 
+// Create the enemy
+enemy2 = game.add.sprite(10, 20, 'baddie');
+// Animate the enemy2
+enemy2.animations.add('left', [0,1], 10, true);
+enemy2.animations.add('right', [2,3], 10, true);
+game.physics.arcade.enable(enemy1);
+enemy2.body.bounce.y = 0.2;
+enemy2.body.gravity.y = 500;
+enemy2.body.collideWorldBounds = true;
+
+// Create the enemy
+enemy3 = game.add.sprite(200, 20, 'baddie');
+// Animate the enemy3
+enemy3.animations.add('left', [0,1], 10, true);
+enemy3.animations.add('right', [2,3], 10, true);
+game.physics.arcade.enable(enemy1);
+enemy3.body.bounce.y = 0.2;
+enemy3.body.gravity.y = 500;
+enemy3.body.collideWorldBounds = true;	
+	
+	// Create keyboard entries
 	cursors = game.imput.keyboard.createCursorKeys();
+	// Create Diamonds
+	diamonds = game.add.physicsGroup();
+	diamonds.enableBody = true;
+	var diamond = diamonds.create(Math.floor(Math.random()*750), 0, "diamond");
+	diamond.body.gravity.y = 200;
+	diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
+
+	//V2 - add enter key as an input
+	enterKey = game.input.keyboard.addKey(Phaser.Keyboard.ENTER);
+
+	//V2 - create health pack group
+  	healths = game.add.physicsGroup();
+  	healths.enableBody = true;
+
+  	//V2 - game over text
+  	goText = game.add.text(0,0,'',style);
+  	goText.setShadow(3,3,'rgba(0,0,0,0.5)',2);
+  	goText.setTextBounds(100,200,800,100);
+  	goText.visible = false;
 
 }
 
@@ -90,7 +132,163 @@ function update(){
 	game.physics.arcade.collide(player, platform);
 	game.physics.arcade.collide(stars, platform);
 	game.physics.arcade.collide(enemy1, platform);
+	game.physics.arcade.collide(enemy2, platform);
+	game.physics.arcade.collide(enemy3, platform);
+	game.physics.arcade.collide(diamonds, platform);
+	game.physics.arcade.collide(healths, platform);
+
+
+	player.body.velocity.x = 0;
+
+	if (cursors.left.isDown) {
+
+		player.body.velocity.x = -150;
+		player.animations.play("left")
+	}
+
+	else if (cursors.right.isDown) {
+		player.bod.velocity.x = 150;
+		player.animations.player("right");
+
+	}
+
+else {
+
+	player.animations.stop();
+	player.frame = 4;
+	
+	}
+
+	if (cursors.up.isDown && player.body.touching.down) {
+		player.body.velocity.y = -300;
+	}
+
+	game.physics.arcade.overlap(player, stars, collectStar);
+	game.physics.arcade.overlap(player, enemy1, loseLife);
+	game.physics.arcade.overlap(player, enemy2, loseLife);
+	game.physics.arcade.overlap(player, enemy3, loseLife);
+
+	game.physics.arcade.overlap(player, diamonds, collectDiamond);
+	game.physics.arcade.overlap(player, healths, collectHealths);
+	moveEnemy();
+
+	if (lives < 0) {
+
+		endGame();
+	}
+
+
+
 }
+
+function collectStar(player, star){
+	score + 1;
+
+	scoreText.setText(score);
+
+	star.kill();
+
+	star.reset(Math.floor(Math.random() * 750), 0);
+}
+
+function loseLife(player, enemy1){
+	lives -= 1;
+
+	lifeText.setText(lives);
+
+	enemy1.kill();
+
+	enemy1.reset(10,20);
+
+}
+
+function collectDiamond(player, diamond){
+	score += 10;
+
+	scoreText.setText(score);
+
+	diamond.kill();
+
+	diamond.reset(Math.random() * 750, 0);
+}
+
+function collectHealth(player, health){
+	life += 1;
+
+	lifeText.setText(life);
+
+	health.kill();
+}
+
+function moveEnemy(){
+	if (enemy1.x > 759) {
+
+		enemy1.animations.play("left");
+
+		enemy1.body.velocity.x = -120;
+
+	}
+	else if (enemy1.x < 405) {
+		enemy1.animations.play("right")
+
+		enemy1.body.velocity.x = 120;
+
+	}
+}
+
+function restartGame(){
+	stars.callAll("kill");
+	diamonds.callAll("kill");
+	healths.callAll("kill");
+
+	for (var count = 0; count < 12; ++count){
+		var star = stars.create(count * 70, 0, "star");
+		star.body.gravity.y = 200;
+
+		star.body.bounce.y = 0.7 + Math.random() * 0.2;
+	}
+
+	var diamond = diamonds.create(Math.floor(Math.random()*750), 0, 'diamond');
+	
+	diamond.body.gravity.y = 200;
+	
+	diamond.body.bounce.y = 0.7 + Math.random() * 0.2;
+
+	score = 0;
+
+	lives = 3;
+
+	player.reset(32, 400);
+
+	lifeText.setText(lives);
+
+	scoreText.setText(score);
+
+	goText.visible = false;
+
+	scoreLabel.visible = true;
+
+	scoreText.visible = true;
+
+	lifeLabel.visible = true;
+
+	lifeText.visible = true;
+}
+
+function endGame(){
+
+	player.kill();
+	scoreLabel.text="GAME OVER! You scored " + score;
+	scoreText.visible = false;
+	lifeLabel.visible = false;
+	lifeText.visible = false;
+
+	goText.visible = true;
+	goText.text = "You have scored" + score + ".\nPress ENTER to start again";
+
+	scoreLabel.visible = false;
+
+	enterKey.onDown.addOnce(restartGame);
 
 
 
